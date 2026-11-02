@@ -1,9 +1,12 @@
-streamlit>=1.40.0
+# Pinned to the versions that produced model/*.joblib.
+# scikit-learn must match exactly: the pickles are stamped _sklearn_version 1.9.0
+# and loading them under a different release raises InconsistentVersionWarning
+# or fails outright.
+scikit-learn==1.9.0
+numpy>=2.0.0
 pandas>=2.2.0
-numpy>=1.26.0
-scikit-learn>=1.5.0
+joblib>=1.4.0
+streamlit>=1.40.0
+plotly>=5.24.0
 matplotlib>=3.8.0
 seaborn>=0.13.0
-plotly>=5.24.0
-joblib>=1.4.0
-openpyxl>=3.1.0

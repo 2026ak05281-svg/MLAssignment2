@@ -50,12 +50,18 @@ st.set_page_config(page_title='Telco Churn — Model Evaluation',
 @st.cache_resource
 def load_models():
     """Load the five pre-trained pipelines. Never retrains."""
-    models = {}
+    models, failures = {}, {}
     for name, fname in MODEL_FILES.items():
         path = os.path.join(MODEL_DIR, fname)
-        if os.path.exists(path):
+        if not os.path.exists(path):
+            failures[name] = f'file not found: {fname}'
+            continue
+        try:
             models[name] = joblib.load(path)
-    return models
+        except Exception as exc:
+            # Usually a scikit-learn version mismatch against the pickled model.
+            failures[name] = f'{type(exc).__name__}: {exc}'
+    return models, failures
 
 
 @st.cache_data
@@ -109,17 +115,27 @@ def score_model(pipe, X, y):
     }, y_pred, y_proba
 
 
-MODELS = load_models()
+MODELS, LOAD_FAILURES = load_models()
 META = load_training_metadata()
 
 # ----------------------------------------------------------------- sidebar
 st.sidebar.title('Telco Churn Evaluation')
 
 if not MODELS:
-    st.error(f'No models found in {MODEL_DIR}. Run `python train_models.py` first.')
+    st.error(f'No models could be loaded from {MODEL_DIR}.')
+    for name, reason in LOAD_FAILURES.items():
+        st.text(f'  {name}: {reason}')
+    st.info('Run `python train_models.py` to regenerate the model files, and '
+            'confirm the scikit-learn version matches requirements.txt.')
     st.stop()
 
 st.sidebar.success(f'{len(MODELS)} pre-trained models loaded')
+
+if LOAD_FAILURES:
+    st.sidebar.warning(f'{len(LOAD_FAILURES)} model(s) failed to load')
+    with st.sidebar.expander('Details'):
+        for name, reason in LOAD_FAILURES.items():
+            st.text(f'{name}: {reason}')
 
 st.sidebar.markdown('### 1. Test data')
 uploaded = st.sidebar.file_uploader(
