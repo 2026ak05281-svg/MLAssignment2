@@ -82,9 +82,9 @@ encoder are **fitted on training data only** — no test-set leakage.
 
 ## c. GitHub Repository Link
 
-**Repository:** _<paste your GitHub repository URL here>_
+**Repository:** https://github.com/2026ak05281-svg/MLAssignment2
 
-**Live Streamlit app:** _<paste your Streamlit Community Cloud URL here>_
+**Live Streamlit app:** https://ml-assignment2-2026ak05281.streamlit.app/
 
 ### Repository structure
 
@@ -220,7 +220,7 @@ flexibility of a kernel method bought nothing and cost 30× the training time.
 
 ## Streamlit Application
 
-**Live app:** _<paste your Streamlit Community Cloud URL here>_
+**Live app:** https://ml-assignment2-2026ak05281.streamlit.app/
 
 ### Features
 
